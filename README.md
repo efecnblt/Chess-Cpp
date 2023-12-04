@@ -8,3 +8,7 @@
 # Save/Load file
  The game also includes the functionality to save the current game. When a user starts a new game, the current state of the game and the turn order are saved into two separate files. This allows the user to resume their game from where they left off when they re-enter the game.
 
+# GAMEPLAY
+
+ You can play the game by simply entering coordinates, just like in a traditional chess game ([e2e4], for example).
+
