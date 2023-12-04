@@ -3,5 +3,5 @@
 
 # Compile-And-Run
   To compile the file within a directory in Ubuntu, simply typing 'make' is sufficient.
-  <code> Make <code>
+  <p> <code> Make  </code></p>
 
