@@ -14,3 +14,4 @@ Chess C++
 
  You can play the game by simply entering coordinates, just like in a traditional chess game ([e2e4], for example).
 
+https://github.com/efecnblt/Chess-Cpp/assets/106485224/d8b9a71d-3eca-45ad-b0fa-3ced7fc58e29
