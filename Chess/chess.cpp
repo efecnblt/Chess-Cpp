@@ -11,6 +11,8 @@ bool rookMove3 = false;
 bool rookMove4 = false;
 bool kingMove1 = false;
 bool kingMove2 = false;
+std::vector<char> WhiteEaten{};
+std::vector<char> BlackEaten{};
 
 std::vector<std::string> Piece{"KING", "QUEEN", "BISHOP", "KNIGHT", "ROOK", "PAWN", "EMPTY"};
 std::vector<std::string> Color{"WHITE", "BLACK", "NONE"};
@@ -657,7 +659,7 @@ void Board::printBoard()
 {
 
     std::cout << "Exit game with (exit/close/save)!" << std::endl;
-
+    printAllEaten();
     std::cout << std::endl;
     int flag = 9;
     for (size_t i = 0; i < 8; i++)
@@ -936,6 +938,7 @@ bool Board::canMove()
 // makeMove ->Determining which piece will be played based on the given coordinates.
 bool Board::makeMove(int x1, int y1, int x2, int y2)
 {
+
     if (x1 < 0 || x1 > 7 || y1 < 0 || y1 > 7 || x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7)
     {
         std::cout << "Please enter valid limits.[a-h, 1-8]" << std::endl;
@@ -1073,6 +1076,10 @@ bool Board::playKing(Cell *king, Cell *space)
 
         else
         {
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
 
             space->fillBlank(king);
             king->setToEmpty();
@@ -1094,7 +1101,10 @@ bool Board::playKing(Cell *king, Cell *space)
 
         else
         {
-
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1113,7 +1123,10 @@ bool Board::playKing(Cell *king, Cell *space)
         }
         else
         {
-
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1132,7 +1145,10 @@ bool Board::playKing(Cell *king, Cell *space)
         }
         else
         {
-
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1156,7 +1172,10 @@ bool Board::playKing(Cell *king, Cell *space)
         }
         else
         {
-
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1175,7 +1194,10 @@ bool Board::playKing(Cell *king, Cell *space)
         }
         else
         {
-
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1196,7 +1218,10 @@ bool Board::playKing(Cell *king, Cell *space)
         }
         else
         {
-
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1215,6 +1240,10 @@ bool Board::playKing(Cell *king, Cell *space)
         }
         else
         {
+            if (space->getType() != "EMPTY")
+            {
+                eaten(space);
+            }
             space->fillBlank(king);
             king->setToEmpty();
             if (player_order == Color.at(0))
@@ -1459,7 +1488,10 @@ bool Board::playQueen(Cell *queen, Cell *space)
     }
     if (!check)
     {
-
+        if (space->getType() != "EMPTY")
+        {
+            eaten(space);
+        }
         space->fillBlank(queen);
         queen->setToEmpty();
         return true;
@@ -1539,6 +1571,10 @@ bool Board::playBishop(Cell *bishop, Cell *space)
 
     if (!check)
     {
+        if (space->getType() != "EMPTY")
+        {
+            eaten(space);
+        }
         space->fillBlank(bishop);
         bishop->setToEmpty();
         return true;
@@ -1558,6 +1594,10 @@ bool Board::playKnight(Cell *knight, Cell *space)
 
     if ((abs(current_X1 - request_x1) == 2 && abs(current_Y1 - request_y1) == 1) || (abs(current_X1 - request_x1) == 1 && abs(current_Y1 - request_y1) == 2))
     {
+        if (space->getType() != "EMPTY")
+        {
+            eaten(space);
+        }
 
         space->fillBlank(knight);
         knight->setToEmpty();
@@ -1657,7 +1697,10 @@ bool Board::playRook(Cell *rook, Cell *space)
         {
             rookMove4 = true;
         }
-
+        if (space->getType() != "EMPTY")
+        {
+            eaten(space);
+        }
         space->fillBlank(rook);
         rook->setToEmpty();
 
@@ -1750,13 +1793,13 @@ bool Board::playPawn(Cell *pawn, Cell *space)
                     setType = Piece.at(1);
                     break;
                 }
-
+                eaten(space);
                 pawn->setType(setType);
                 space->fillBlank(pawn);
                 pawn->setToEmpty();
                 return true;
             }
-
+            eaten(space);
             space->fillBlank(pawn);
             pawn->setToEmpty();
             return true;
@@ -1836,13 +1879,13 @@ bool Board::playPawn(Cell *pawn, Cell *space)
 
                     break;
                 }
-
+                eaten(space);
                 pawn->setType(setType);
                 space->fillBlank(pawn);
                 pawn->setToEmpty();
                 return true;
             }
-
+            eaten(space);
             space->fillBlank(pawn);
             pawn->setToEmpty();
             return true;
@@ -2555,6 +2598,8 @@ void Board::saveToFile()
 
     std::ofstream last_board("board.txt");
     std::ofstream last_player("player.txt");
+    std::ofstream last_WhiteEaten("white_eaten.txt");
+    std::ofstream last_BlackEaten("black_eaten.txt");
     if (last_board.is_open())
     {
         for (size_t i = 0; i < 8; i++)
@@ -2600,6 +2645,22 @@ void Board::saveToFile()
         }
 
         last_player << player_order << std::endl;
+        if (last_WhiteEaten.is_open())
+        {
+            for (size_t i = 0; i < WhiteEaten.size(); i++)
+            {
+                last_WhiteEaten << WhiteEaten.at(i);
+            }
+        }
+        if (last_BlackEaten.is_open())
+        {
+            for (size_t i = 0; i < BlackEaten.size(); i++)
+            {
+                last_BlackEaten << BlackEaten.at(i);
+            }
+        }
+        last_BlackEaten.close();
+        last_WhiteEaten.close();
         last_board.close();
         last_player.close();
     }
@@ -2609,6 +2670,8 @@ bool Board::loadTheFile()
 {
     std::ifstream dosya("board.txt");
     std::ifstream player_turn("player.txt");
+    std::ifstream white_eaten("white_eaten.txt");
+    std::ifstream black_eaten("black_eaten.txt");
     char satir;
     if (dosya.is_open() && player_turn.is_open())
     {
@@ -2688,7 +2751,152 @@ bool Board::loadTheFile()
         }
 
         dosya.close();
+        char c;
+        while (white_eaten.get(c))
+        {
+
+            WhiteEaten.push_back(c);
+        }
+        char k;
+        while (black_eaten.get(k))
+        {
+
+            BlackEaten.push_back(k);
+        }
+        white_eaten.close();
+        black_eaten.close();
         return true;
     }
+
     return false;
+}
+
+void Board::eaten(Cell *piece)
+{
+
+    if (piece->getColor() == "BLACK")
+    {
+        if (piece->getType() == "KNIGHT")
+        {
+            WhiteEaten.push_back(tolower(piece->getType()[1]));
+        }
+        else
+        {
+            WhiteEaten.push_back(tolower(piece->getType()[0]));
+        }
+    }
+    else if (piece->getColor() == "WHITE")
+    {
+        if (piece->getType() == "KNIGHT")
+        {
+            BlackEaten.push_back(piece->getType()[1]);
+        }
+        else
+        {
+            BlackEaten.push_back(piece->getType()[0]);
+        }
+    }
+    else
+    {
+    }
+}
+
+void Board::printAllEaten()
+{
+
+    std::cout << " WHITE    BLACK" << std::endl;
+    std::cout << "|--------------|" << std::endl;
+
+    int p = characterCount(WhiteEaten, 'p');
+    int n = characterCount(WhiteEaten, 'n');
+    int b = characterCount(WhiteEaten, 'b');
+    int q = characterCount(WhiteEaten, 'q');
+    int k = characterCount(WhiteEaten, 'k');
+    int r = characterCount(WhiteEaten, 'r');
+    int p1 = characterCount(BlackEaten, 'P');
+    int n1 = characterCount(BlackEaten, 'N');
+    int b1 = characterCount(BlackEaten, 'B');
+    int q1 = characterCount(BlackEaten, 'Q');
+    int k1 = characterCount(BlackEaten, 'K');
+    int r1 = characterCount(BlackEaten, 'R');
+    if (p != 0)
+    {
+        std::cout << "|p x " << p << " ";
+        if (p1 != 0)
+        {
+            std::cout << "| P x " << p1 << " |" << std::endl;
+        }
+        else
+            std::cout << std::endl;
+    }
+
+    if (n != 0)
+    {
+        std::cout << "|n x " << n << " ";
+        if (n1 != 0)
+        {
+            std::cout << "| N x " << n1 << " |" << std::endl;
+        }
+        else
+            std::cout << std::endl;
+    }
+
+    if (b != 0)
+    {
+        std::cout << "|b x " << b << " ";
+        if (b1 != 0)
+        {
+            std::cout << "| B x " << b1 << " |" << std::endl;
+        }
+        else
+            std::cout << std::endl;
+    }
+
+    if (q != 0)
+    {
+        std::cout << "|q x " << q << " ";
+        if (q1 != 0)
+        {
+            std::cout << "| Q x " << q1 << " |" << std::endl;
+        }
+        else
+            std::cout << std::endl;
+    }
+
+    if (k != 0)
+    {
+        std::cout << "|k x " << k << " ";
+        if (k1 != 0)
+        {
+            std::cout << "| K x " << k1 << " |" << std::endl;
+        }
+        else
+            std::cout << std::endl;
+    }
+
+    if (r != 0)
+    {
+        std::cout << "|r x " << r << " ";
+        if (r1 != 0)
+        {
+            std::cout << "| R x " << r1 << " |" << std::endl;
+        }
+        else
+            std::cout << std::endl;
+    }
+
+    std::cout << "|--------------|" << std::endl;
+}
+
+int Board::characterCount(const std::vector<char> &vec, char karakter)
+{
+    int sayac = 0;
+    for (char c : vec)
+    {
+        if (c == karakter)
+        {
+            sayac++;
+        }
+    }
+    return sayac;
 }

@@ -59,6 +59,9 @@ private:
     void restoreOriginalBoard(Cell original[8][8], Cell copy[8][8]);
     int getPieceValue(Cell *type);
     float evaluateBoard(std::string color);
+    void eaten(Cell *piece);
+    void printAllEaten();
+    int characterCount(const std::vector<char> &vec, char karakter);
 
 public:
     // Allows access to every element of the called cell.
